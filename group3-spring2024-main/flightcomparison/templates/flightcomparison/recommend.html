@@ -1,0 +1,30 @@
+{% extends "flightcomparison/application.html" %}
+
+{% block content %}
+    <h2 style="text-align: center;">Recommended Flights:</h2>
+    {% if flights %}
+        <div class="accordion">
+            {% for flight in flights %}
+            <div class="accordion-item border-0">
+                <h5 class="acordion-header">
+                    Flight from {{flight.departure_location}} to {{flight.arrival_location}}
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse_{{ forloop.counter }}">View More</button>
+                </h5>
+                <div id="collapse_{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <ul style="list-style-type: none;">
+                        <li>Departure Time: {{flight.departure_time}}</li>
+                        <li>Arrival Time: {{flight.arrival_time}}</li>
+                        <li>Price: ${{flight.price}}</li>
+                        <li>Airline: United</li>
+                        <li><a button class="btn btn-primary" type="button" href="{% url 'flight_detail' flight.id %}">More Details</a></li>
+                      </ul>
+                    </div>
+                  </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No Flights currently in the database.</p>
+    {% endif %}
+{% endblock %}

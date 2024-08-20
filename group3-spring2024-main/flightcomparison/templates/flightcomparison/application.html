@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Airline Flight Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <!-- Styles -->
+    <link href="{% static 'flightcomparison/styles.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<style>
+    body, html {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+       /* background-image: url('https://img.freepik.com/premium-photo/top-view-white-toy-airplane-model-blue-color-background-concept-travel_43448-410.jpg'); /*
+       /* background-size: cover;      */
+       /* background-position: center; */
+       /* background-repeat: no-repeat; */
+       /* background-attachment: fixed; */
+    }
+    .sidebar {
+        height: 100%;
+        width: 150px;
+        position: fixed;
+        left: 0;
+        background-color: #ADD8E6; /* Adjusted to a lighter blue */
+        padding-top: 20px;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    .sidebar a {
+        padding: 12px 15px; /* Adjusted padding for a tighter fit */
+        font-size: 20px; /* Reduced font size */
+        display: block;
+        text-decoration: none;
+        color: white;
+        background-color: #0000FF; /* Adjusted to a pure blue color */
+        text-align: center;
+        transition: all 0.3s;
+    }
+    .sidebar a:hover, .sidebar a:active {
+        background-color: #000080; /* Darker blue on hover */
+        color: white;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2); /* Shadow effect for active state */
+    }
+    .container {
+        margin-left: 150px;
+        padding: 15px;
+        font-size: 16px; /* Reduced font size for content */
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px; /* Added bottom margin for spacing */
+    }
+    .header h1 {
+        font-size: 22px; /* Adjusted title font size */
+        margin: 0; /* Reset margin for h1 */
+    }
+    .header .group {
+        text-align: right;
+        font-size: 16px; /* Adjusted font size for group info */
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    tr:hover {
+        background-color: #f5f5f5; /* Hover state for table rows */
+    }
+    /* bootstrap button primary changes */
+    .btn-primary {
+        background-color: #0000FF; /* Adjusted to a pure blue color */
+        color: white;
+        padding: 8px 16px; /* Adjusted padding */
+        font-size: 16px; /* Adjusted font size */
+        border: none;
+        cursor: pointer; /* Cursor pointer to indicate clickable */
+        transition: background-color 0.3s;
+    }
+    .btn-primary:hover, .btn-primary:active {
+        background-color: #000080; /* Darker blue on hover and active */
+        color: white;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2); /* Shadow effect for active state */
+    }
+    .accordion {
+        border-width: 0;
+        text-align: center;
+    }
+    /* Responsive layout for mobile */
+    @media (max-width: 600px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        .container {
+            margin-left: 0;
+        }
+        .header {
+            flex-direction: column;
+            text-align: center;
+        }
+        .header .group {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .page-button {
+            width: 100%;
+        }
+    }
+    .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+    }
+    .search-container input[type=text] {
+        padding: 10px;
+        margin-top: 10px;
+        width: 30%;
+        border: none;
+        border-radius: 5px;
+    }
+    .search-container button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        background: blue;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .search-container button:hover {
+        background: #0a5b8a;
+    }
+    .compareHighlight {
+        background-color: green;
+        color: white;
+    }
+    .right-aligned-container {
+        text-align: right;
+    }
+
+    @media screen and (max-width: 767px) {
+        /* Adjust the styling for screens with a maximum width of 767px */
+        .right-aligned-container {
+            position: static; /* Reset the position for smaller screens */
+            width: 100%;      /* Occupy full width on smaller screens */
+        }
+    }
+
+    @media screen and (min-width: 1300px) {
+        /* Adjust the styling for screens with a minimum width of 768px */
+        .right-aligned-container {
+            position: absolute;
+            right: 47%;        /* Adjust the percentage as needed for larger screens */
+            max-width: 400px;  /* Set a maximum width for larger screens */
+            
+        }
+    }
+    /* autocomplete CSS */
+    .autocomplete {
+    position: relative;
+    display: inline-block;
+    }
+    .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right:0;
+    width: 47%;
+    }
+
+    .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff; 
+    border-bottom: 1px solid #d4d4d4; 
+    }
+
+    /*when hovering an item:*/
+    .autocomplete-items div:hover {
+    background-color: #e9e9e9; 
+    }
+
+    /*when navigating through the items using the arrow keys:*/
+    .autocomplete-active {
+    background-color: DodgerBlue !important; 
+    color: #ffffff; 
+    }
+</style>
+</head>
+<body>
+    <!--sidebar, found at link with some modifications-->
+    <!--https://www.devwares.com/docs/contrast/javascript/navigation/sidebar/-->
+    <div class="sidebar" role="cdb-sidebar">
+        <div class="sidebar-container">
+          <div class="sidebar-nav">
+            <div class="sidenav">
+              <a class="sidebar-item" href="{% url 'flight_search' %}">
+                <div class="sidebar-item-content">
+                  <i class="fa fa-th-large sidebar-icon sidebar-icon-lg"></i>
+                  <span>Search</span>
+                </div>
+              </a>
+              <a class="sidebar-item" href="{% url 'recommend' %}">
+                <div class="sidebar-item-content">
+                  <i class="fa fa-sticky-note sidebar-icon"></i>
+                  <span>Recommend</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- PAGE CONTENT -->
+    <div class="container">
+        <div class="header">
+            <h1>Airline Flight Comparison</h1>
+            <div class="group">Group 3 Spring 2024</div>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

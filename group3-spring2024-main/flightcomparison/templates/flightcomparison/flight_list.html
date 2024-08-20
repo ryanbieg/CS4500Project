@@ -1,0 +1,28 @@
+{% extends "flightcomparison/application.html" %}
+
+{% block content %}
+    <h2 style="text-align: center;">Current Available Flights</h2>
+    {% if flight_list %}
+        <table>
+            <tr>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Departure Time</th>
+                <th>Arrival Time</th>
+                <th>Actions</th>
+            </tr>
+            {% for flight in flight_list %}
+            <tr>
+                <td>{{ flight.departure_location }}</td>
+                <td>{{ flight.arrival_location }}</td>
+                <td>{{ flight.departure_time }}</td>
+                <td>{{ flight.arrival_time }}</td>
+                <td>This is the flight ID: {{ flight.id }}</td>
+                <td><button class="page-button" >View More</button></td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No Flights currently in the database.</p>
+    {% endif %}
+{% endblock %}

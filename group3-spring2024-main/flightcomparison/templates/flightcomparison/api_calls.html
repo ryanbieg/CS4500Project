@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenSky Network API Calls</title>
+</head>
+<body>
+
+<h2>OpenSky Network API Calls</h2>
+
+<form id="flightsByAircraftForm" action="/get-flights-by-aircraft/" method="get" target="_blank">
+  <label for="icao24Flights">ICAO24:</label><br>
+  <input type="text" id="icao24Flights" name="icao24" value="ABC123"><br>
+  <label for="beginFlights">Begin:</label><br>
+  <input type="text" id="beginFlights" name="begin" value="1609459200"><br>
+  <label for="endFlights">End:</label><br>
+  <input type="text" id="endFlights" name="end" value="1609545600"><br>
+  <button type="submit" onclick="getFlightsByAircraft()">Get Flights by Aircraft</button>
+</form>
+
+<form id="flightsFromIntervalForm" action="/get-flights-from-interval/" method="get" target="_blank">
+  <label for="beginInterval">Begin:</label><br>
+  <input type="text" id="beginInterval" name="begin" value="1609459200"><br>
+  <label for="endInterval">End:</label><br>
+  <input type="text" id="endInterval" name="end" value="1609545600"><br>
+  <button type="submit" onclick="getFlightsFromInterval()">Get Flights from Interval</button>
+</form>
+
+<form id="myStatesForm" action="/get-my-states/" method="get" target="_blank">
+  <label for="timeSecsStates">Time (secs):</label><br>
+  <input type="text" id="timeSecsStates" name="time_secs" value="1609459200"><br>
+  <label for="icao24States">ICAO24:</label><br>
+  <input type="text" id="icao24States" name="icao24" value="ABC123"><br>
+  <label for="serialsStates">Serials:</label><br>
+  <input type="text" id="serialsStates" name="serials" value="12345"><br>
+  <button type="submit" onclick="getMyStates()">Get My States</button>
+</form>
+
+<form id="arrivalsByAirportForm" action="/get-arrivals-by-airport/" method="get" target="_blank">
+  <label for="airportArrivals">Airport:</label><br>
+  <input type="text" id="airportArrivals" name="airport" value="EDDF"><br>
+  <label for="beginArrivals">Begin:</label><br>
+  <input type="text" id="beginArrivals" name="begin" value="1609459200"><br>
+  <label for="endArrivals">End:</label><br>
+  <input type="text" id="endArrivals" name="end" value="1609545600"><br>
+  <button type="submit" onclick="getArrivalsByAirport()">Get Arrivals by Airport</button>
+</form>
+
+<form id="departuresByAirportForm" action="/get-departures-by-airport/" method="get" target="_blank">
+  <label for="airportDepartures">Airport:</label><br>
+  <input type="text" id="airportDepartures" name="airport" value="EDDF"><br>
+  <label for="beginDepartures">Begin:</label><br>
+  <input type="text" id="beginDepartures" name="begin" value="1609459200"><br>
+  <label for="endDepartures">End:</label><br>
+  <input type="text" id="endDepartures" name="end" value="1609545600"><br>
+  <button type="submit" onclick="getDeparturesByAirport()">Get Departures by Airport</button>
+</form>
+
+<button id="getStatesButton">Get States</button>
+
+<script>
+function fetchStates() {
+    fetch("/fetch_states_api", {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); 
+        alert("Response received. Check console for details.");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred. Check console for details.");
+    });
+}
+
+document.getElementById("getStatesButton").addEventListener("click", fetchStates);
+
+function getOwnStates() {
+    const username = 'USERNAME';
+    const password = 'PASSWORD';
+    const credentials = btoa(`${username}:${password}`);
+
+    fetch("/get_own_states_api", {
+        method: 'POST',
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        alert("Response received. Check console for details.");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred. Check console for details.");
+    });
+}
+
+function getDeparturesByAirport() {
+    const airport = document.getElementById("airportArrivals").value;
+    const begin = document.getElementById("beginArrivals").value;
+    const end = document.getElementById("endArrivals").value;
+
+    fetch("/get_departures_by_airport_api", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            airport: airport,
+            begin: begin,
+            end: end
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); 
+        alert("Response received. Check console for details.");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred. Check console for details.");
+    });
+}
+
+function getArrivalsByAirport() {
+    const airport = document.getElementById("airportArrivals").value;
+    const begin = document.getElementById("beginArrivals").value;
+    const end = document.getElementById("endArrivals").value;
+
+    // api is down atm so do not have these yet
+    const username = 'USERNAME';
+    const password = 'PASSWORD';
+    const credentials = btoa(`${username}:${password}`);
+    const url = '/arrivals_by_airport_api'
+    const params = {
+        airport: airport,
+        begin: begin,
+        end: end
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        },
+        body: JSON.stringify(params)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(results => {
+        displayResults(results);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function getFlightsInTimeInterval() {
+    const username = 'USERNAME';
+    const password = 'PASSWORD';
+    const credentials = btoa(`${username}:${password}`);
+
+    const begin = document.getElementById("begin").value;
+    const end = document.getElementById("end").value;
+
+    fetch("/get_flights_in_time_interval_api", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${credentials}`
+        },
+        body: JSON.stringify({
+            begin: begin,
+            end: end
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); 
+        alert("Response received. Check console for details.");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred. Check console for details.");
+    });
+}
+
+</script>
+
+</body>
+</html>

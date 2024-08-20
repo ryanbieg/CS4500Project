@@ -1,0 +1,60 @@
+{% extends "flightcomparison/application.html" %}
+{% block content %}
+
+
+<style>
+    .table td:first-child {
+        border-right: 1px solid #dddddd; /* Add a right border to the first td in each row */
+    }
+</style>
+
+<div class="container">
+    <!-- Display Flight Data -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Flight From: "{{ flight.departure_location }}" To: "{{ flight.arrival_location }}"</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><b>Departure Time:</b></td>
+                            <td><span>{{ flight.departure_time }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Arrival Time:</b></td>
+                            <td><span>{{ flight.arrival_time }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Layover:</b></td>
+                            <td><span>{{ flight.layover_location }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Price:</b></td>
+                            <td><span>${{ flight.price }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Seat Number:</b></td>
+                            <td><span>{{ flight.seat_number }}</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Checked Bag Allowance:</b></td>
+                            <td><span>2</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Carry-on:</b></td>
+                            <td><span>1</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Personal Item:</b></td>
+                            <td><span>1</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

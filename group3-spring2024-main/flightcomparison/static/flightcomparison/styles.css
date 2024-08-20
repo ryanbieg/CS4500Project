@@ -1,0 +1,33 @@
+.view_options{
+    width: 100%;
+    margin: 25px 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.view_options div{
+    padding: 3px 22px;
+    border: 1px solid #84d0e9;
+    border-radius: 15%;
+    color: #84d0e9;
+    background-color: white;
+}
+
+.view_options div:hover{
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #84d0e9;
+}
+
+.view_options .active{
+    background-color: #84d0e9;
+    color: white;
+}
+
+.map{
+    width: 75%;
+    height: 400px;
+}
+
+
+
+

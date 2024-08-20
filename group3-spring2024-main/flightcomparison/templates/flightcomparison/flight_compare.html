@@ -1,0 +1,175 @@
+{% extends 'flightcomparison/flight_search.html' %}
+
+{% block flightSearch %}
+
+<h2>Comparing Flights</h2>
+
+<!-- View Options -->
+<div class="view_options">
+    <div class="left {% if '/list' in request.path %} active {% endif %}" onclick="location.href='{% url 'compare/list' flight_ids sort %}'">
+        <a style="text-decoration: none;" class="left {% if '/compare/list' in request.path %} active {% endif %}">
+            List
+        </a>
+    </div>
+    <div class="right {% if '/map' in request.path %} active {% endif %}" onclick="location.href='{% url 'compare/map' flight_ids sort %}'">
+        <a style="text-decoration: none;" class="right {% if '/compare/map' in request.path %} active {% endif %}">
+            Map
+        </a>
+    </div>
+</div>
+
+<!-- List View -->
+{% if '/compare/list' in request.path %}
+<table>
+    <tr>
+        <th>Flight</th>
+        <th>Departure Location</th>
+        <th>Arrival Location</th>
+        <th>Departure Time</th>
+        <th>Arrival Time</th>
+        <th>Price</th>
+        <th>Airline</th>
+    </tr>
+    {% for flight in flights %}
+    <tr>
+        <th>Flight {{ forloop.counter }}</th>
+        <th>{{ flight.departure_location }}</th>
+        <th>{{ flight.arrival_location }}</th>
+        <!-- Departure time -->
+        {% if sort == 'earlydepart' and forloop.first %}
+            <th class="compareHighlight">{{ flight.departure_time }}</th>
+        {% elif sort == 'latestdepart' and forloop.first %}
+            <th class="compareHighlight">{{ flight.departure_time }}</th>
+        {% else %}
+            <th>{{ flight.departure_time }}</th>
+        {% endif %}
+        <!-- Arrival time -->
+        {% if sort == 'earlyarrival' and forloop.first %}
+            <th class="compareHighlight">{{ flight.arrival_time }}</th>
+        {% elif sort == 'latestarrival' and forloop.first %}
+            <th class="compareHighlight">{{ flight.arrival_time }}</th>
+        {% else %}
+            <th>{{ flight.arrival_time }}</th>
+        {% endif %}
+        <!-- Price -->
+        {% if sort == 'price' and forloop.first %}
+            <th class="compareHighlight">${{ flight.price }}</th>
+        {% else %}
+            <th>${{ flight.price }}</th>
+        {% endif %}
+        <!-- Airline -->
+        <th>United</th>
+    </tr>
+    {% endfor %}
+    <!-- <tr>
+        <th>Flight 1</th>
+        <th>{{flight1.departure_location}}</th>
+        <th>{{flight1.arrival_location}}</th> -->
+        <!--Departure time-->
+        <!-- {% if sort == 'earlydepart' %}
+            {% if flight2.departure_time > flight1.departure_time %}
+                <th class="compareHighlight">{{flight1.departure_time}}</th>
+            {% else %}
+                <th>{{flight1.departure_time}}</th>
+            {% endif %}
+        {% elif sort == 'latestdepart' %}
+            {% if flight2.departure_time < flight1.departure_time %}
+            <th class="compareHighlight">{{flight1.departure_time}}</th>
+            {% else %}
+                <th>{{flight1.departure_time}}</th>
+            {% endif %}
+        {% else %}
+        <th>{{flight1.departure_time}}</th>
+        {% endif %} -->
+        <!--Arrival time-->
+        <!-- {% if sort == 'earlyarrival' %}
+            {% if flight1.arrival_time < flight2.arrival_time %}
+            <th class="compareHighlight">{{flight1.arrival_time}}</th>
+            {% else %}
+            <th>{{flight1.arrival_time}}</th>
+            {% endif %}
+        {% elif sort == 'latestarrival' %}
+            {% if flight1.arrival_time > flight2.arrival_time %}
+            <th class="compareHighlight">{{flight1.arrival_time}}</th>
+            {% else %}
+            <th>{{flight1.arrival_time}}</th>
+            {% endif %}
+        {% else %}
+        <th>{{flight1.arrival_time}}</th>
+        {% endif %} -->
+        <!--Price-->
+        <!-- {% if sort == 'price' %} 
+            {% if flight2.price > flight1.price %}
+            <th class="compareHighlight">${{flight1.price}}</th> 
+            {% else %} 
+            <th>${{flight1.price}}</th> 
+            {% endif %}
+        {% else %}
+            <th>${{flight1.price}}</th>
+        {% endif %} -->
+        <!--Airline-->
+        <!-- <th>United</th> -->
+    <!-- </tr>
+    <tr>
+        <th>Flight 2</th>
+        <th>{{flight2.departure_location}}</th>
+        <th>{{flight2.arrival_location}}</th> -->
+        <!--Departure Time-->
+        <!-- {% if sort == 'earlydepart' %}
+            {% if flight2.departure_time < flight1.departure_time %}
+                <th class="compareHighlight">{{flight2.departure_time}}</th>
+            {% else %}
+                <th>{{flight2.departure_time}}</th>
+            {% endif %}
+        {% elif sort == 'latestdepart' %}
+            {% if flight2.departure_time > flight1.departure_time %}
+            <th class="compareHighlight">{{flight2.departure_time}}</th>
+            {% else %}
+                <th>{{flight2.departure_time}}</th>
+            {% endif %}
+        {% else %}
+        <th>{{flight2.departure_time}}</th>
+        {% endif %} -->
+        <!--Arrival Time-->
+        <!-- {% if sort == 'earlyarrival' %}
+            {% if flight1.arrival_time > flight2.arrival_time %}
+            <th class="compareHighlight">{{flight2.arrival_time}}</th>
+            {% else %}
+            <th>{{flight2.arrival_time}}</th>
+            {% endif %}
+        {% elif sort == 'latestarrival' %}
+            {% if flight1.arrival_time < flight2.arrival_time %}
+            <th class="compareHighlight">{{flight2.arrival_time}}</th>
+            {% else %}
+            <th>{{flight2.arrival_time}}</th>
+            {% endif %}
+        {% else %}
+        <th>{{flight2.arrival_time}}</th>
+        {% endif %} -->
+        <!--Price-->
+        <!-- {% if sort == 'price' %} 
+            {% if flight2.price < flight1.price %}
+            <th style="background-color: green; color: white;">${{flight2.price}}</th> 
+            {% else %} 
+            <th>${{flight2.price}}</th> 
+            {% endif %}
+        {% else %}
+            <th>${{flight2.price}}</th>
+        {% endif %} 
+        <th>United</th>
+    </tr> -->
+</table>
+{% endif %}
+
+<!--Map View-->
+{% if '/compare/map' in request.path %}
+
+<div id="map" style="height: 600px;" data-flights="{{flights_dict}}"></div>
+
+{% load static %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbrBnMlfMqs2QcYeHRRhDXoFUc64R3bXk"></script>
+<script src="{% static 'flightcomparison/maps.js' %}"></script>
+
+{% endif %}
+
+{% endblock %}

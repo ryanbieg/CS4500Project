@@ -1,0 +1,94 @@
+{% extends 'flightcomparison/flight_search.html' %}
+
+{% block flightSearch %}
+<h3 style="text-align: center;">Comparing flights {% if query_data %} {% if query_data.0 != "" %} from {{query_data.0}} {% endif %}{% if query_data.1 != "" %} to {{query_data.1}} {% endif %}{% if query_data.2 != "" %} at {{query_data.2}} {% endif %}
+     {% if query_data.3 != ""%} at price {{query_data.3}} {% endif%}{% if query_data.4 != "" %} sorted by 
+     {% if query_data.4 == 'price' %}price: {% elif query_data.4 == 'earlydepart' %}earliest departure: {% elif query_data.4 == 'latestdepart' %}latest departure: {% elif query_data.4 == 'earlyarrival' %}earliest arrival:
+     {% else %}latest arrival: {% endif %} {% endif %} {% endif %}</h3>
+{% if flights %}
+<!--Comparison accordion-->
+<div class="accordion" style="margin-top: 15px;">
+    <h5 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Compare Flights
+        </button>                
+    </h5>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
+        <div class="accordion-body">
+            <form method="POST" action="{% url 'flight_search_data' %}" style="text-align: center;">
+                {% csrf_token %}
+                <!-- demo -->
+                {% for flight in flights %}
+                <p>
+                    <label for="flight{{forloop.counter}}">Flight {{forloop.counter}}:</label>
+                    <select name="flights[]" id="flight{{forloop.counter}}">
+                        {% for flight in flights %}
+                        <option value="{{ flight.id }}" >{{ flight.departure_location }} to {{flight.arrival_location}} at {{flight.departure_time}}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                {% endfor %}
+                <!--First flight-->
+                <!-- <p>
+                    <label for="flight1">Flight 1:</label>
+                    <select name="flight1" id="flight1">
+                        {% for flight in flights %}
+                        <option value="{{ flight.id }}">{{ flight.departure_location }} to {{flight.arrival_location}} at {{flight.departure_time}}</option>
+                        {% endfor %}
+                    </select>
+                </p> -->
+                <!--Second flight-->
+                <!-- <p>
+                    <label for="flight2">Flight 2:</label>
+                    <select name="flight2" id="flight2">
+                        {% for flight in flights %}
+                        <option value="{{ flight.id }}">{{ flight.departure_location }} to {{flight.arrival_location}} at {{flight.departure_time}}</option>
+                        {% endfor %}
+                    </select>
+                </p> -->
+                <!--Sorting option-->
+                <p>
+                    <label for="sortoption">Sort Option:</label>
+                    <select name="sortoption" id="sort">
+                        <option value="price">Price</option>
+                        <option value="earlydepart">Earliest Departure</option>
+                        <option value="latestdepart">Latest Departure</option>
+                        <option value="earlyarrival">Earliest Arrival</option>
+                        <option value="latestarrival">Latest Arrival</option>
+                    </select>
+                </p>
+                <button class="btn btn-primary" type="submit" style="padding: 10px 100px;">Compare</button>
+            </form>
+        </div>
+    </div>
+</div>
+        <h2>Search Results</h2>
+        <!--All search results for flight-->
+        <div class="accordion">
+            {% for flight in flights %}
+            <div class="accordion-item border-0">
+                <h5 class="acordion-header">
+                    {{flight.departure_location}} to {{flight.arrival_location}}: {% if query_data.4 != "" %} {% if query_data.4 == 'price' %}<b>Price: ${{flight.price}}</b> {% elif query_data.4 == 'earlydepart' %}<b>Departure Time: {{flight.departure_time}}</b>
+                    {% elif query_data.4 == 'latestdepart' %}<b>Departure Time: {{flight.departure_time}}</b> {% else %}<b>Arrival Time: {{flight.arrival_time}}</b> {% endif %}{% endif %}
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse_{{ forloop.counter }}">View More</button>
+                </h5>
+                <div id="collapse_{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="headingOne">
+                    <div class="accordion-body">
+                      <ul style="list-style-type: none;">
+                        <li><strong>{{flight.departure_location}} to {{flight.arrival_location}}</strong></li>
+                        <li>Departure Time: {{flight.departure_time}}</li>
+                        <li>Arrival Time: {{flight.arrival_time}}</li>
+                        <li>Price: ${{flight.price}}</li>
+                        <li>Airline: United</li>
+                        <li><a button class="btn btn-primary" type="button" href="{% url 'flight_detail' flight.id %}">More Details</a></li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p></p><p></p><p style="text-align: center;">No flights found for search query. Please try again</p>
+    {% endif %}
+    
+{% endblock %}

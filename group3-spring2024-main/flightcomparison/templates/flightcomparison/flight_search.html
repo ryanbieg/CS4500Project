@@ -1,0 +1,38 @@
+{% extends "flightcomparison/application.html" %}
+{% block content %}
+{% load static %}
+<script src="{% static 'flightcomparison/autocomplete.js' %}"></script>
+<div>
+    <h1 style="text-align: center;">Airline Flight Comparison</h1>
+    <h5 style="text-align: center;">"Fly Anywhere"</h5>
+    <p></p><p></p>
+</div>
+<div>
+    <h2 style="text-align: center;">Search for Flight</h2>
+    <form autocomplete="off" method="GET" action="{% url 'flight_search_data' %}" style="text-align: center;">
+        <div class="autocomplete">
+            Departure: <input type="text" id="departureInput" name="departure_location" placeholder="Departure Location" value="{% if query_data %}{% if query_data.0 != '' %}{{query_data.0}}{% endif %}{% endif %}"> 
+            Arrival: <input type="text" id="arrivalInput" name="arrival_location" placeholder="Arrival Location"value="{% if query_data %}{% if query_data.1 != '' %}{{query_data.1}}{% endif %}{% endif %}">
+            Departure Time: <input type="datetime-local" name="departure_time" placeholder="Departure Time" value="{% if query_data %}{% if query_data.2 != '' %}{{query_data.2}}{% endif %}{% endif %}">
+            Price: <input type="number" name="price" placeholder="Price" value="{% if query_data %}{% if query_data.3 != '' %}{{query_data.3}}{% endif %}{% endif %}">
+            <p></p><p><label for="sortoption">Sort By:</label>
+                    <select name="sortoption" id="sort">
+                        <option value="price">Price</option>
+                        <option value="earlydepart">Earliest Departure</option>
+                        <option value="latestdepart">Latest Departure</option>
+                        <option value="earlyarrival">Earliest Arrival</option>
+                        <option value="latestarrival">Latest Arrival</option>
+                    </select></p>
+            <div id="departureOptions" class="suggestions"></div>
+            <div id="arrivalOptions" class="suggestions"></div>   
+        </div>
+        <button class="btn btn-primary" type="submit" style="margin-top:10px; padding: 10px 100px;">Search</button>
+    </form>
+</div>
+
+<!-- Display search results here -->
+<div>
+    {% block flightSearch %}
+    {% endblock %}
+</div>
+{% endblock %}
